@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Spotify Style Player</title>
+
+<style>
+
+body{
+margin:0;
+background:#121212;
+font-family:Arial, Helvetica, sans-serif;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.player{
+
+width:360px;
+background:#181818;
+padding:30px;
+border-radius:16px;
+box-shadow:0 15px 40px rgba(0,0,0,0.7);
+
+}
+
+.cover{
+
+width:100%;
+border-radius:10px;
+margin-bottom:20px;
+
+}
+
+.title{
+
+font-size:20px;
+font-weight:bold;
+
+}
+
+.artist{
+
+color:#b3b3b3;
+font-size:14px;
+margin-bottom:15px;
+
+}
+
+.progress{
+
+width:100%;
+cursor:pointer;
+
+}
+
+.time{
+
+display:flex;
+justify-content:space-between;
+font-size:12px;
+color:#aaa;
+
+}
+
+.controls{
+
+display:flex;
+align-items:center;
+justify-content:center;
+gap:18px;
+margin-top:15px;
+
+}
+
+button{
+
+background:none;
+border:none;
+color:white;
+font-size:22px;
+cursor:pointer;
+
+}
+
+.play{
+
+background:#1DB954;
+width:55px;
+height:55px;
+border-radius:50%;
+font-size:24px;
+
+}
+
+.volume{
+
+width:80px;
+cursor:pointer;
+
+}
+
+.volicon{
+
+font-size:16px;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="player">
+
+<img src="cover.jpg" class="cover">
+
+<div class="title">My Song</div>
+<div class="artist">Unknown Artist</div>
+
+<audio id="audio" src="song.mp3"></audio>
+
+<input type="range" id="progress" class="progress" value="0">
+
+<div class="time">
+<span id="current">0:00</span>
+<span id="duration">0:00</span>
+</div>
+
+<div class="controls">
+
+<button onclick="back()">⏮</button>
+
+<button class="play" onclick="toggle()">▶</button>
+
+<button onclick="next()">⏭</button>
+
+<span class="volicon">🔊</span>
+
+<input type="range" id="volume" class="volume" min="0" max="1" step="0.01" value="1">
+
+</div>
+
+</div>
+
+<script>
+
+let audio=document.getElementById("audio")
+let progress=document.getElementById("progress")
+let volume=document.getElementById("volume")
+
+let current=document.getElementById("current")
+let duration=document.getElementById("duration")
+
+function toggle(){
+
+if(audio.paused){
+audio.play()
+}else{
+audio.pause()
+}
+
+}
+
+function back(){
+audio.currentTime=0
+}
+
+function next(){
+audio.currentTime=audio.duration
+}
+
+audio.addEventListener("loadedmetadata",()=>{
+
+progress.max=audio.duration
+
+let m=Math.floor(audio.duration/60)
+let s=Math.floor(audio.duration%60)
+
+if(s<10)s="0"+s
+
+duration.textContent=m+":"+s
+
+})
+
+audio.addEventListener("timeupdate",()=>{
+
+progress.value=audio.currentTime
+
+let m=Math.floor(audio.currentTime/60)
+let s=Math.floor(audio.currentTime%60)
+
+if(s<10)s="0"+s
+
+current.textContent=m+":"+s
+
+})
+
+progress.addEventListener("input",()=>{
+
+audio.currentTime=progress.value
+
+})
+
+volume.addEventListener("input",()=>{
+
+audio.volume=volume.value
+
+})
+
+</script>
+
+</body>
+</html>
